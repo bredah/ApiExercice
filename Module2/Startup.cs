@@ -28,6 +28,9 @@ namespace Module2
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            // Enable API versioning
+            services.AddApiVersioning();
+            // Enable EF
             services.AddDbContext<ProductsDbContext>(option =>
                 option.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
         }

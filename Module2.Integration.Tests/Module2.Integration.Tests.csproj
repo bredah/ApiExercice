@@ -19,13 +19,15 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Controller\" />
-    </ItemGroup>
-
-    <ItemGroup>
       <Content Include="..\Module2\appsettings.json">
         <Link>appsettings.json</Link>
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </Content>
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Update="data.json">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
     </ItemGroup>
 </Project>

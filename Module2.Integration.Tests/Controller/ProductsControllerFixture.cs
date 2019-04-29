@@ -1,13 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Net.Http;
-using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Module2.Data;
 using Module2.Models;
-using Xunit;
+using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.IO;
 
 namespace Module2.Integration.Tests.Controller
 {
@@ -22,13 +20,15 @@ namespace Module2.Integration.Tests.Controller
                 context.Database.EnsureCreated();
 
                 // Add a new product
-                var products = new List<Product>();
-                products.Add(new Product() {Id = 1, ProductName = "First Product", Price = "100,00"});
-                products.Add(new Product() {Id = 2, ProductName = "Second Product", Price = "200,00"});
-                products.Add(new Product() {Id = 3, ProductName = "Old Product", Price = "300,00"});
-                context.Products.AddRange(products);
-                context.SaveChanges();
-                context.Database.CloseConnection();
+                using (StreamReader reader = new StreamReader("data.json"))
+                {
+                    var json = reader.ReadToEnd();
+                    var products = JsonConvert.DeserializeObject<List<Product>>(json);
+                    context.Products.AddRange(products);
+                    context.SaveChanges();
+                    context.Database.CloseConnection();
+                }
+
             }
         }
 

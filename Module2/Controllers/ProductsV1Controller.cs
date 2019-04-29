@@ -1,23 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Module2.Data;
 using Module2.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace Module2.Controllers
 {
+    [ApiVersion("1.0")]
     [Produces("application/json")]
-    [Route("api/[controller]")]
-    public class ProductsController : Controller
+    [Route("api/v{version:apiVersion}/products")]
+    public class ProductsV1Controller : Controller
     {
         private readonly ProductsDbContext _productsDbContext;
 
-        public ProductsController(ProductsDbContext productsDbContext)
+        public ProductsV1Controller(ProductsDbContext productsDbContext)
         {
             _productsDbContext = productsDbContext;
         }
@@ -55,9 +54,9 @@ namespace Module2.Controllers
             _productsDbContext.SaveChanges(true);
             return CreatedAtAction("Get", product);
         }
-        
-        
-        
+
+
+
 
         // PUT api/values/5
         [HttpPut("{id}")]

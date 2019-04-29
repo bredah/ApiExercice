@@ -10,7 +10,7 @@ namespace Module2.Models
         [Required(ErrorMessage = "{0} is required")]
         public string ProductName { get; set; }
         [Required(ErrorMessage = "{0} is required")]
-        [RegularExpression(@"[0-9]+,[0-9]{2}$", ErrorMessage = "Invalid price value")]
+        [RegularExpression(@"[0-9]+\.[0-9]{2}$", ErrorMessage = "Invalid price value")]
         public string Price { get; set; }
     }
 }
