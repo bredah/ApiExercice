@@ -9,32 +9,32 @@ namespace WebApi.Tests.Services
     public class ProductRepositoryFixture
     {
 
-        protected readonly DbContextOptions<ProductsDbContext> options;
+        protected readonly DbContextOptions<ProductsDbContext> Options;
 
-        protected readonly IList<Product> products;
+        private readonly IList<Product> _products;
 
-        public ProductRepositoryFixture()
+        protected ProductRepositoryFixture()
         {
-            products = new List<Product>()
+            _products = new List<Product>()
             {
                 new Product(){ Id = 1, ProductName = "Mouse",Price = "10.00" },
-                new Product(){ Id = 2, ProductName = "Teclado", Price = "20.00" },
-                new Product(){ Id = 3, ProductName = "Notebook", Price = "20.00" }
+                new Product(){ Id = 2, ProductName = "Keyboard", Price = "20.00" },
+                new Product(){ Id = 3, ProductName = "Notebook", Price = "200.00" }
             };
 
-            options = new DbContextOptionsBuilder<ProductsDbContext>()
+            Options = new DbContextOptionsBuilder<ProductsDbContext>()
                 .UseInMemoryDatabase(databaseName: "bookstore")
                 .Options;
 
-            InitalState();
+            InitialState();
         }
 
-        private void InitalState()
+        private void InitialState()
         {
-            using (var context = new ProductsDbContext(options))
+            using (var context = new ProductsDbContext(Options))
             {
                 var service = new ProductRepository(context);
-                service.AddProduct(products[0]);
+                service.AddProduct(_products[0]);
             }
         }
     }

@@ -23,15 +23,15 @@ namespace WebApi.Tests.Services
         [Fact]
         public async Task AddProductAsync()
         {
-            var product = new Product() { Id = 1, ProductName = "desktop", Price = "200.00" };
+            var product = new Product() { ProductName = "desktop", Price = "200.00" };
             // Run the test against one instance of the context
-            using (var context = new ProductsDbContext(options))
+            using (var context = new ProductsDbContext(Options))
             {
                 var service = new ProductRepository(context);
                 service.AddProduct(product);
             }
             // Use a separate instance of the context to verify correct data was saved to database
-            using (var context = new ProductsDbContext(options))
+            using (var context = new ProductsDbContext(Options))
             {
                 Assert.Equal(4, await context.Products.CountAsync());
             }
