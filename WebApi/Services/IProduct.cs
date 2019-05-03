@@ -5,10 +5,10 @@ namespace WebApi.Services
 {
     public interface IProduct
     {
-        IEnumerable<Product> GetProducts();
+        IEnumerable<Product> GetProducts(string searchDescription = null, string sortPrice = null, int pageNumber = 1, int pageSize = 1);
         Product GetProduct(int id);
         void AddProduct(Product product);
-        void UpdateProduct(Product product);
-        void DeleteProduct(int id);
+        int UpdateProduct(Product product);
+        int DeleteProduct(int id);
     }
 }

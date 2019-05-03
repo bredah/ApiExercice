@@ -28,6 +28,9 @@ bld/
 [Oo]bj/
 [Ll]og/
 
+# EF Migration
+Migrations
+
 # Visual Studio 2015/2017 cache/options directory
 .vs/
 

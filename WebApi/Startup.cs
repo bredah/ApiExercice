@@ -33,7 +33,7 @@ namespace WebApi
             });
             // Enable EF
             services.AddDbContext<ProductsDbContext>(option =>
-                option.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+                option.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
             // Resolves the depencencies to always created
             services.AddScoped<IProduct, ProductRepository>();
             // Register the swagger generator
@@ -67,6 +67,12 @@ namespace WebApi
                 // Use the swagger app's root
                 swagger.RoutePrefix = string.Empty;
             });
+
+            app.UseCors(builder => builder
+                .AllowAnyHeader()
+                .AllowAnyMethod()
+                .AllowAnyOrigin()
+            );
 
             app.UseHttpsRedirection();
             app.UseMvc();

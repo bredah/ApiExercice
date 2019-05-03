@@ -27,8 +27,6 @@ namespace WebApi.Integration.Tests.Controller
                     context.SaveChanges();
                     context.Database.CloseConnection();
                 }
-                context.Dispose();
-
             }
         }
 
@@ -41,7 +39,7 @@ namespace WebApi.Integration.Tests.Controller
             var configuration = builder.Build();
 
             return new DbContextOptionsBuilder<ProductsDbContext>()
-                .UseSqlServer(configuration.GetConnectionString("DefaultConnection"))
+                .UseSqlite(configuration.GetConnectionString("DefaultConnection"))
                 .Options;
         }
     }

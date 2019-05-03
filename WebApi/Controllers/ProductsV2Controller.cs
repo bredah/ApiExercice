@@ -2,8 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using WebApi.Data;
 using WebApi.Models;
+using WebApi.Services;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -15,43 +15,25 @@ namespace WebApi.Controllers
     [Route("api/v{version:apiVersion}/products")]
     public class ProductsV2Controller : ControllerBase
     {
-        private readonly ProductsDbContext _productsDbContext;
+        private readonly IProduct productRepository;
 
-        public ProductsV2Controller(ProductsDbContext productsDbContext)
+        public ProductsV2Controller(IProduct productRepository)
         {
-            _productsDbContext = productsDbContext;
+            this.productRepository = productRepository;
         }
 
         // GET: api/values
         [HttpGet]
-        public IEnumerable<Product> Get(string searchDescription = null, string sortPrice = null, int? pageNumber = 1, int? pageSize = 5)
+        public IEnumerable<Product> Get(string searchDescription = null, string sortPrice = null, int pageNumber = 1, int pageSize = 5)
         {
-            int currentPage = pageNumber ?? 1;
-            int currentPageSize = pageSize ?? 1;
-            IQueryable<Product> products;
-
-            products = String.IsNullOrEmpty(searchDescription) ? _productsDbContext.Products : _productsDbContext.Products.Where(p => p.ProductName.Contains(searchDescription));
-
-            switch (sortPrice)
-            {
-                case "asc":
-                    products = products.OrderBy(p => p.Price);
-                    break;
-                case "desc":
-                    products = products.OrderByDescending(p => p.Price);
-                    break;
-                default:
-                    break;
-            }
-
-            return products.Skip((currentPage - 1) * currentPageSize).Take(currentPageSize).ToList();
+            return productRepository.GetProducts(searchDescription,sortPrice,pageNumber,pageSize);
         }
 
         // GET api/values/5
         [HttpGet("{id}", Name = "Get")]
         public IActionResult Get(int id)
         {
-            var product = _productsDbContext.Products.SingleOrDefault(p => p.Id == id);
+            var product = productRepository.GetProduct(id);
             if (product == null)
             {
                 return NotFound("Product not found...");
@@ -68,9 +50,7 @@ namespace WebApi.Controllers
             {
                 return BadRequest(ModelState);
             }
-
-            _productsDbContext.Products.Add(product);
-            _productsDbContext.SaveChanges(true);
+            productRepository.AddProduct(product);
             return CreatedAtAction("Get", product);
         }
 
@@ -97,8 +77,7 @@ namespace WebApi.Controllers
             // Update the product
             try
             {
-                _productsDbContext.Products.Update(product);
-                _productsDbContext.SaveChanges(true);
+                productRepository.UpdateProduct(product);
             }
             catch (Exception e)
             {
@@ -113,16 +92,15 @@ namespace WebApi.Controllers
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            // Check if the product exists
-            var product = _productsDbContext.Products.SingleOrDefault(p => p.Id == id);
-            if (product == null)
+           try
             {
-                return BadRequest("Product not found...");
+                productRepository.DeleteProduct(id);
             }
-
-            // Remove the product
-            _productsDbContext.Products.Remove(product);
-            _productsDbContext.SaveChanges(true);
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return BadRequest("It not possible to remove the product with this id");
+            }
             return Ok("Product is removed");
         }
     }
