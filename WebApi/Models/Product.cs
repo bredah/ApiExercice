@@ -9,7 +9,7 @@ namespace WebApi.Models
         public int Id { get; set; }
         [Required(ErrorMessage = "{0} is required")]
         public string ProductName { get; set; }
-        [Required(ErrorMessage = "{0} is required")]
+        [Range(1, double.MaxValue, ErrorMessage = "{0} is required")]
         //[RegularExpression(@"[0-9]+\.[0-9]{2}$", ErrorMessage = "Invalid price value")]
         public decimal Price { get; set; }
 

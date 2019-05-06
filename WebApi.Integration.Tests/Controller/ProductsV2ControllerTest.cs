@@ -1,22 +1,21 @@
 using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-using WebApi.Data;
 using WebApi.Models;
 using Xunit;
 
 namespace WebApi.Integration.Tests.Controller
 {
-    public class ProductsV2ControllerTest : IClassFixture<WebApplicationFactory<Startup>>, IDisposable
+    public class ProductsV2ControllerTest :
+        ProductsControllerFixture,
+        IClassFixture<WebApplicationFactory<Startup>>,
+        IDisposable
     {
         private HttpClient Client { get; }
 
@@ -28,8 +27,6 @@ namespace WebApi.Integration.Tests.Controller
             basePath = $"api/v{apiVersion}/products";
             // Create a client using the main server app
             Client = factory.CreateClient();
-
-            Seed();
         }
 
         public void Dispose()
@@ -206,7 +203,7 @@ namespace WebApi.Integration.Tests.Controller
         public async Task Delete()
         {
             // Post the request and capture the return
-            var response = await Client.DeleteAsync($"{basePath}/2");
+            var response = await Client.DeleteAsync($"{basePath}/12");
             // Check the response status code
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         }
@@ -228,7 +225,7 @@ namespace WebApi.Integration.Tests.Controller
                 new object[]
                     {new Product() {Id = 5, ProductName = $"", Price = 500.00M}, "ProductName is required"},
                 new object[]
-                    {new Product() {Id = 5, ProductName = $"New Product", Price = 500M}, "Invalid price value"},
+                    {new Product() {Id = 5, ProductName = $"New Product"}, "Price is required"},
             };
 
         public static IEnumerable<object[]> PutBadRequest =>
@@ -244,34 +241,5 @@ namespace WebApi.Integration.Tests.Controller
                     {6, new Product() {Id = 5, ProductName = $"New Product", Price = 500.00M}, "Check the product id"},
             };
 
-        private void Seed()
-        {
-            var builder = new ConfigurationBuilder()
-               .SetBasePath(Directory.GetCurrentDirectory())
-               .AddJsonFile("appsettings.json");
-
-            var configuration = builder.Build();
-
-            var dbContext = new DbContextOptionsBuilder<ProductsDbContext>()
-                .UseSqlite(configuration.GetConnectionString("DefaultConnection"))
-                .Options;
-
-            using (var context = new ProductsDbContext(dbContext))
-            {
-                // 
-                context.Database.EnsureDeleted();
-                context.Database.EnsureCreated();
-
-                // Add a new product
-                using (StreamReader reader = new StreamReader("data.json"))
-                {
-                    var json = reader.ReadToEnd();
-                    var products = JsonConvert.DeserializeObject<List<Product>>(json);
-                    context.Products.AddRange(products);
-                    context.SaveChanges();
-                    context.Database.CloseConnection();
-                }
-            }
-        }
     }
 }

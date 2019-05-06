@@ -17,15 +17,31 @@ namespace WebApi.Services
 
         public void Dispose()
         {
-            this.DBContext.Dispose();
+            DBContext.Dispose();
+            GC.SuppressFinalize(this);
         }
 
+        ~ProductRepository()
+        {
+            DBContext.Dispose();
+        }
+
+
+        /// <summary>
+        /// Add the new product
+        /// </summary>
+        /// <param name="product">Product to add</param>
         public void AddProduct(Product product)
         {
             DBContext.Products.Add(product);
             DBContext.SaveChanges(true);
         }
 
+        /// <summary>
+        /// Delete the product from db
+        /// </summary>
+        /// <param name="id">Product Id</param>
+        /// <returns>How many changes occurred during the delete</returns>
         public int DeleteProduct(int id)
         {
             var product = DBContext.Products.Find(id);
@@ -41,6 +57,14 @@ namespace WebApi.Services
             return product;
         }
 
+        /// <summary>
+        /// Retrive all product in the db
+        /// </summary>
+        /// <param name="searchDescription">Find a product by a short description</param>
+        /// <param name="sortPrice">Sort the result by ASC or DESC</param>
+        /// <param name="pageNumber">Show the result of a specific page</param>
+        /// <param name="pageSize">How many items will be shown in the list</param>
+        /// <returns></returns>
         public IEnumerable<Product> GetProducts(string searchDescription = null, string sortPrice = null, int pageNumber = 1, int pageSize = 1)
         {
             IQueryable<Product> products;
@@ -67,6 +91,11 @@ namespace WebApi.Services
             return products.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
         }
 
+        /// <summary>
+        /// Update the product
+        /// </summary>
+        /// <param name="product">Product to update</param>
+        /// <returns>How many changes occurred during the update</returns>
         public int UpdateProduct(Product product)
         {
             var entity = DBContext.Products.Find(product.Id);

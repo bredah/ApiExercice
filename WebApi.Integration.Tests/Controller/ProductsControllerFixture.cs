@@ -10,9 +10,29 @@ namespace WebApi.Integration.Tests.Controller
 {
     public class ProductsControllerFixture
     {
+        private static bool Seeded = false;
+
         public ProductsControllerFixture()
         {
-            using (var context = new ProductsDbContext(GetDbContextOptions()))
+            Seed();
+        }
+
+        public void Seed()
+        {
+            if (Seeded) { return; }
+
+
+            var builder = new ConfigurationBuilder()
+               .SetBasePath(Directory.GetCurrentDirectory())
+               .AddJsonFile("appsettings.json");
+
+            var configuration = builder.Build();
+
+            var dbContext = new DbContextOptionsBuilder<ProductsDbContext>()
+                .UseSqlite(configuration.GetConnectionString("DefaultConnection"))
+                .Options;
+
+            using (var context = new ProductsDbContext(dbContext))
             {
                 // 
                 context.Database.EnsureDeleted();
@@ -28,19 +48,8 @@ namespace WebApi.Integration.Tests.Controller
                     context.Database.CloseConnection();
                 }
             }
-        }
 
-        private DbContextOptions<ProductsDbContext> GetDbContextOptions()
-        {
-            var builder = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json");
-
-            var configuration = builder.Build();
-
-            return new DbContextOptionsBuilder<ProductsDbContext>()
-                .UseSqlite(configuration.GetConnectionString("DefaultConnection"))
-                .Options;
+            Seeded = true;
         }
     }
 }
