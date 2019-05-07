@@ -8,6 +8,9 @@ Example of a web API and all test phases.
 [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=bredah_csharp-webapi&metric=bugs)](https://sonarcloud.io/dashboard?id=bredah_csharp-webapi)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=bredah_csharp-webapi&metric=coverage)](https://sonarcloud.io/dashboard?id=bredah_csharp-webapi)
 
+
+[![Build Status](https://dev.azure.com/bredah/CSharp-WebApi/_apis/build/status/bredah.csharp-webapi?branchName=master)](https://dev.azure.com/bredah/CSharp-WebApi/_build/latest?definitionId=1&branchName=master)
+
 ## Project Structure
 
 - WebApi: Base Project
