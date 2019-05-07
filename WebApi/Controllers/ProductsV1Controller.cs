@@ -35,7 +35,7 @@ namespace WebApi.Controllers
             var product = productRepository.GetProduct(id);
             if (product == null)
             {
-                return NotFound("Product not found...");
+                return NotFound("Product not found");
             }
 
             return Ok(product);
@@ -50,7 +50,7 @@ namespace WebApi.Controllers
                 return BadRequest(ModelState);
             }
             productRepository.AddProduct(product);
-            return CreatedAtAction("Get", product);
+            return CreatedAtAction(nameof(Get), product.Id, product);
         }
 
 
@@ -84,7 +84,7 @@ namespace WebApi.Controllers
                 return NotFound("No record found against with id");
             }
 
-            return AcceptedAtAction("Get", product);
+            return AcceptedAtAction(nameof(Get), product);
         }
 
         // DELETE api/values/5
@@ -93,7 +93,11 @@ namespace WebApi.Controllers
         {
             try
             {
-                productRepository.DeleteProduct(id);
+                var count = productRepository.DeleteProduct(id);
+                if(count < 1)
+                {
+                    return NotFound("No record found against with id");
+                }
             }
             catch (Exception e)
             {

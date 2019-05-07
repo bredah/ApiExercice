@@ -7,7 +7,7 @@ namespace WebApi.Services
     {
         IEnumerable<Product> GetProducts(string searchDescription = null, string sortPrice = null, int pageNumber = 1, int pageSize = 1);
         Product GetProduct(int id);
-        void AddProduct(Product product);
+        int AddProduct(Product product);
         int UpdateProduct(Product product);
         int DeleteProduct(int id);
     }

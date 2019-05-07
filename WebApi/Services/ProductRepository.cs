@@ -21,20 +21,14 @@ namespace WebApi.Services
             GC.SuppressFinalize(this);
         }
 
-        ~ProductRepository()
-        {
-            DBContext.Dispose();
-        }
-
-
         /// <summary>
         /// Add the new product
         /// </summary>
         /// <param name="product">Product to add</param>
-        public void AddProduct(Product product)
+        public int AddProduct(Product product)
         {
             DBContext.Products.Add(product);
-            DBContext.SaveChanges(true);
+            return DBContext.SaveChanges(true);
         }
 
         /// <summary>
