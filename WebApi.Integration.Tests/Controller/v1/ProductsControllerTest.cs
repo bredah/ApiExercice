@@ -10,9 +10,9 @@ using System.Threading.Tasks;
 using WebApi.Models;
 using Xunit;
 
-namespace WebApi.Integration.Tests.Controller
+namespace WebApi.Integration.Tests.Controller.v1
 {
-    public class ProductsV1ControllerTest :
+    public class ProductsControllerTest :
         ProductsControllerFixture,
         IClassFixture<WebApplicationFactory<Startup>>,
         IDisposable
@@ -22,7 +22,7 @@ namespace WebApi.Integration.Tests.Controller
         private const string apiVersion = "1";
         private readonly string basePath;
 
-        public ProductsV1ControllerTest(WebApplicationFactory<Startup> factory)
+        public ProductsControllerTest(WebApplicationFactory<Startup> factory)
         {
             basePath = $"api/v{apiVersion}/products";
             // Create a client using the main server app

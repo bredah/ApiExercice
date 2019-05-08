@@ -1,6 +1,11 @@
 # C# WebApi
 
-Example of a web API and all test phases.
+
+Example of a web API and all test phases, based in the guidelines:
+
+- [Microsoft - API](https://github.com/Microsoft/api-guidelines/blob/master/Guidelines.md)
+
+- Project Status:
 
 [![Quality gate](https://sonarcloud.io/api/project_badges/quality_gate?project=bredah_csharp-webapi)](https://sonarcloud.io/dashboard?id=bredah_csharp-webapi)
 

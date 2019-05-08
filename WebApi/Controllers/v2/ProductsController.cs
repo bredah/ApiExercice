@@ -1,31 +1,31 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using WebApi.Models;
 using WebApi.Services;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
-namespace WebApi.Controllers
+namespace WebApi.Controllers.v2
 {
-    [ApiVersion("1.0")]
     [ApiController]
     [Produces("application/json")]
-    [Route("api/v{version:apiVersion}/products")]
-    public class ProductsV1Controller : ControllerBase
+    [Route("api/v{version:apiVersion}/[controller]")]
+    public class ProductsController : ControllerBase
     {
         private readonly IProduct productRepository;
 
-        public ProductsV1Controller(IProduct productRepository)
+        public ProductsController(IProduct productRepository)
         {
             this.productRepository = productRepository;
         }
 
         // GET: api/values
         [HttpGet]
-        public IEnumerable<Product> Get()
+        public IActionResult Get(string searchDescription = null, string sortPrice = null, int pageNumber = 1, int pageSize = 5)
         {
-            return productRepository.GetProducts();
+            return Ok(productRepository.GetProducts(searchDescription,sortPrice,pageNumber,pageSize));
         }
 
         // GET api/values/5
@@ -50,7 +50,7 @@ namespace WebApi.Controllers
                 return BadRequest(ModelState);
             }
             productRepository.AddProduct(product);
-            return CreatedAtAction(nameof(Get), product.Id, product);
+            return CreatedAtAction("Get", product);
         }
 
 
@@ -84,7 +84,7 @@ namespace WebApi.Controllers
                 return NotFound("No record found against with id");
             }
 
-            return AcceptedAtAction(nameof(Get), product);
+            return AcceptedAtAction("Get", product);
         }
 
         // DELETE api/values/5
@@ -94,7 +94,7 @@ namespace WebApi.Controllers
             try
             {
                 var count = productRepository.DeleteProduct(id);
-                if(count < 1)
+                if (count < 1)
                 {
                     return NotFound("No record found against with id");
                 }

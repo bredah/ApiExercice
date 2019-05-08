@@ -1,48 +1,63 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using WebApi.Models;
 using WebApi.Services;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
-namespace WebApi.Controllers
+namespace WebApi.Controllers.v1
 {
-    [ApiVersion("2.0")]
+    /// <summary>
+    /// 
+    /// </summary>
     [ApiController]
     [Produces("application/json")]
-    [Route("api/v{version:apiVersion}/products")]
-    public class ProductsV2Controller : ControllerBase
+    [Route("api/v{version:apiVersion}/[controller]")]
+    public class ProductsController : ControllerBase
     {
         private readonly IProduct productRepository;
 
-        public ProductsV2Controller(IProduct productRepository)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="productRepository"></param>
+        public ProductsController(IProduct productRepository)
         {
             this.productRepository = productRepository;
         }
 
-        // GET: api/values
+        /// <summary>
+        /// Get All
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
-        public IEnumerable<Product> Get(string searchDescription = null, string sortPrice = null, int pageNumber = 1, int pageSize = 5)
+        public IActionResult Get()
         {
-            return productRepository.GetProducts(searchDescription,sortPrice,pageNumber,pageSize);
+            return Ok(productRepository.GetProducts());
         }
 
-        // GET api/values/5
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet("{id}", Name = "Get")]
         public IActionResult Get(int id)
         {
             var product = productRepository.GetProduct(id);
             if (product == null)
             {
-                return NotFound("Product not found...");
+                return NotFound("Product not found");
             }
 
             return Ok(product);
         }
 
-        // POST api/values
+        /// <summary>
+        /// Post
+        /// </summary>
+        /// <param name="product"></param>
+        /// <returns></returns>
         [HttpPost]
         public IActionResult Post([FromBody] Product product)
         {
@@ -51,13 +66,17 @@ namespace WebApi.Controllers
                 return BadRequest(ModelState);
             }
             productRepository.AddProduct(product);
-            return CreatedAtAction("Get", product);
+            return CreatedAtAction(nameof(Get), product.Id, product);
         }
 
 
 
-
-        // PUT api/values/5
+        /// <summary>
+        /// Put
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="product"></param>
+        /// <returns></returns>
         [HttpPut("{id}")]
         public IActionResult Put(int id, [FromBody] Product product)
         {
@@ -85,16 +104,24 @@ namespace WebApi.Controllers
                 return NotFound("No record found against with id");
             }
 
-            return AcceptedAtAction("Get", product);
+            return AcceptedAtAction(nameof(Get), product);
         }
 
-        // DELETE api/values/5
+        /// <summary>
+        /// Delete
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-           try
+            try
             {
-                productRepository.DeleteProduct(id);
+                var count = productRepository.DeleteProduct(id);
+                if (count < 1)
+                {
+                    return NotFound("No record found against with id");
+                }
             }
             catch (Exception e)
             {

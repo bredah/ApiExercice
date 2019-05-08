@@ -1,0 +1,102 @@
+﻿[
+  {
+    "id": 1,
+    "productName": "Android TV",
+    "price": "100.00"
+  },
+  {
+    "id": 2,
+    "productName": "Nokia 2",
+    "price": "200.00"
+  },
+  {
+    "id": 3,
+    "productName": "Android Smartwatch",
+    "price": "250.00"
+  },
+  {
+    "id": 4,
+    "productName": "Nokia 7",
+    "price": "350.00"
+  },
+  {
+    "id": 5,
+    "productName": "Nokia 9",
+    "price": "800.00"
+  },
+  {
+    "id": 6,
+    "productName": "Huawei P30",
+    "price": "1700.00"
+  },
+  {
+    "id": 7,
+    "productName": "Huawei P20",
+    "price": "1200.00"
+  },
+  {
+    "id": 8,
+    "productName": "Motorola Xoom",
+    "price": "150.00"
+  },
+  {
+    "id": 9,
+    "productName": "Android Tablet",
+    "price": "7000.00"
+  },
+  {
+    "id": 10,
+    "productName": "Apple TV",
+    "price": "1000.00"
+  },
+  {
+    "id": 11,
+    "productName": "iPhone 5S",
+    "price": "1000.00"
+  },
+  {
+    "id": 12,
+    "productName": "iPhone 6",
+    "price": "1300.00"
+  },
+  {
+    "id": 13,
+    "productName": "iPhone 6S",
+    "price": "1350.00"
+  },
+  {
+    "id": 14,
+    "productName": "iPhone 7",
+    "price": "1400.00"
+  },
+  {
+    "id": 15,
+    "productName": "iPhone 7S",
+    "price": "1450.00"
+  },
+  {
+    "id": 16,
+    "productName": "iPhone 8",
+    "price": "1500.00"
+  },
+  {
+    "id": 17,
+    "productName": "iPhone 8S",
+    "price": "1550.00"
+  },
+  {
+    "id": 18,
+    "productName": "iPhone X",
+    "price": "1800.00"
+  },
+  {
+    "id": 19,
+    "productName": "iPad mini",
+    "price": "1200.00"
+  },
+  {
+    "id": 20,
+    "productName": "iPad Pro",
+    "price": "2000.00"
+  }
+]
