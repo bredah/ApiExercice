@@ -110,6 +110,20 @@ namespace WebApi.Tests.Controllers.v1
             Assert.Equal(product, response.Value);
         }
 
+        [Theory, MemberData(nameof(PostBadRequest))]
+        public void Post_BadRequest(Product product, string field, string messageError)
+        {
+            // Prepare the mock
+            var mockRepository = new Mock<IProduct>();
+            var controller = new ProductsController(mockRepository.Object);
+            controller.ModelState.AddModelError(field, messageError);
+            // Make the request
+            var response = controller.Post(product) as ObjectResult;
+            // Validate the response
+            Assert.Equal((int)HttpStatusCode.BadRequest, response.StatusCode);
+            Assert.IsType<SerializableError>(response.Value);
+        }
+
         [Fact]
         public void Put()
         {
@@ -135,7 +149,63 @@ namespace WebApi.Tests.Controllers.v1
             Assert.IsType<Product>(response.Value);
             Assert.Equal(product, response.Value);
         }
-        
+
+        [Theory, MemberData(nameof(PutModelStateBadRequest))]
+        public void Put_BadRequest_ModelState(int id, Product product, string field, string messageError)
+        {
+            // Prepare the mock
+            var mockRepository = new Mock<IProduct>();
+            var controller = new ProductsController(mockRepository.Object);
+            controller.ModelState.AddModelError(field, messageError);
+            // Make the request
+            var response = controller.Put(id, product) as ObjectResult;
+            // Validate the response
+            Assert.Equal((int)HttpStatusCode.BadRequest, response.StatusCode);
+            Assert.IsType<SerializableError>(response.Value);
+        }
+
+        [Fact]
+        public void Put_BadRequest_InvalidId()
+        {
+            var product = new Product()
+            {
+                Id = 3,
+                ProductName = $"Product Modified",
+                Price = 1000.00M
+            };
+            // Prepare the mock
+            var mockRepository = new Mock<IProduct>();
+            var controller = new ProductsController(mockRepository.Object);
+            // Make the request
+            var response = controller.Put(product.Id + 1, product) as ObjectResult;
+            // Validate the response
+            Assert.Equal((int)HttpStatusCode.BadRequest, response.StatusCode);
+            Assert.NotNull(response);
+            Assert.NotNull(response.Value);
+        }
+
+        [Fact]
+        public void Put_NotFound()
+        {
+            var product = new Product()
+            {
+                Id = 3,
+                ProductName = $"Product Modified",
+                Price = 1000.00M
+            };
+            // Prepare the mock
+            var mockRepository = new Mock<IProduct>();
+            mockRepository.Setup(x => x.UpdateProduct(product))
+                 .Throws(new System.Exception());
+            var controller = new ProductsController(mockRepository.Object);
+            // Make the request
+            var response = controller.Put(product.Id, product) as ObjectResult;
+            // Validate the response
+            Assert.Equal((int)HttpStatusCode.NotFound, response.StatusCode);
+            Assert.NotNull(response);
+            Assert.NotNull(response.Value);
+        }
+
         [Fact]
         public void Delete()
         {
@@ -171,5 +241,43 @@ namespace WebApi.Tests.Controllers.v1
             Assert.NotNull(response.Value);
             Assert.Equal("No record found against with id", response.Value);
         }
+
+        [Fact]
+        public void Delete_BadRequest()
+        {
+            // Prepare the mock
+            var mockRepository = new Mock<IProduct>();
+            mockRepository.Setup(x => x.DeleteProduct(1))
+                 .Throws(new System.Exception());
+            var controller = new ProductsController(mockRepository.Object);
+
+            // Make the request
+            var response = controller.Delete(1) as ObjectResult;
+
+            // Validate the response 
+            Assert.Equal((int)HttpStatusCode.BadRequest, response.StatusCode);
+            Assert.NotNull(response);
+            Assert.NotNull(response.Value);
+        }
+
+        public static IEnumerable<object[]> PostBadRequest =>
+        new List<object[]>
+        {
+                new object[]
+                    {new Product(), "ProductName", "ProductName is required"},
+                new object[]
+                    {new Product() {Id = 5, ProductName = $"", Price = 500.00M}, "ProductName", "ProductName is required"},
+                new object[]
+                    {new Product() {Id = 5, ProductName = $"New Product"}, "Price", "Price is required"}
+        };
+
+        public static IEnumerable<object[]> PutModelStateBadRequest =>
+            new List<object[]>
+            {
+                new object[]
+                    {5, new Product(), "ProductName", "ProductName is required"},
+                new object[]
+                    {5, new Product() {Id = 5, ProductName = $"", Price = 500.00M}, "ProductName", "ProductName is required"},
+            };
     }
 }

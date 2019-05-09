@@ -13,7 +13,6 @@ using Xunit;
 namespace WebApi.Integration.Tests.Controller.v2
 {
     public class ProductsControllerTest :
-        ProductsControllerFixture,
         IClassFixture<WebApplicationFactory<Startup>>,
         IDisposable
     {

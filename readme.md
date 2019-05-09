@@ -22,6 +22,26 @@ Example of a web API and all test phases, based in the guidelines:
 - WebApi.Tests: Unit test
 - WebApi.Integration.Tests: Testes integrados
 
+## DB Seed
+
+Create a initial state
+
+```bash
+dotnet ef migrations add Initial --project WebApi
+```
+
+Drop the old information
+
+```bash
+dotnet ef database drop --force --project WebApi
+```
+
+Load data into db
+
+```bash
+dotnet ef database update --project WebApi
+```
+
 ## Code Inspection - Local
 
 Install the Sonar Scanner plugin

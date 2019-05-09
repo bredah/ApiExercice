@@ -13,7 +13,6 @@ using Xunit;
 namespace WebApi.Integration.Tests.Controller.v1
 {
     public class ProductsControllerTest :
-        ProductsControllerFixture,
         IClassFixture<WebApplicationFactory<Startup>>,
         IDisposable
     {
@@ -38,7 +37,9 @@ namespace WebApi.Integration.Tests.Controller.v1
         [Fact]
         public async Task Get_All()
         {
+            // Make the request
             var response = await Client.GetAsync($"{basePath}");
+            // Vaidate the response
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             // Validate response content
             var json = await response.Content.ReadAsStringAsync();

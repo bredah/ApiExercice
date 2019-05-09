@@ -70,8 +70,6 @@ namespace WebApi
 
             app.UseHttpsRedirection();
             app.UseMvc();
-            // Create and seed the db
-            Seed(productsDbContext);        
             // Enable middleware to serve generate Swagger as a JSON endpoint
             app.UseSwagger();
             // Enable the middleware to serve swagger-ui
@@ -85,25 +83,6 @@ namespace WebApi
                             description.GroupName.ToUpperInvariant());
                     }
                 });
-        }
-
-        /// <summary>
-        /// Seed the DB with the default values
-        /// </summary>
-        /// <param name="context"></param>
-        private static void Seed(ProductsDbContext context)
-        {
-            context.Database.EnsureDeleted();
-            context.Database.EnsureCreated();
-
-            // Add a new product
-            using (StreamReader reader = new StreamReader("data.json"))
-            {
-                var json = reader.ReadToEnd();
-                var products = JsonConvert.DeserializeObject<List<Product>>(json);
-                context.Products.AddRange(products);
-                context.SaveChanges();
-            }
         }
     }
 }
