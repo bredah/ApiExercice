@@ -25,7 +25,7 @@ namespace WebApi.Tests.Services
 
             _context = new ProductsDbContext(_options);
 
-            Seed(_context);
+            Seed();
         }
 
         public void Dispose()
@@ -50,7 +50,7 @@ namespace WebApi.Tests.Services
             using (var repository = new ProductRepository(_context))
             {
                 var result = repository.GetProducts(searchDescription: "bo");
-                Assert.Equal(2, result.Count());
+                Assert.Single(result);
             }
         }
 
@@ -115,7 +115,7 @@ namespace WebApi.Tests.Services
                 repository.AddProduct(product);                
             }
             // Use a separate instance of the context to verify correct data was saved to database
-            using (var repository = new ProductRepository(_context))
+            using (var repository = new ProductRepository(new ProductsDbContext(_options)))
             {
                 Assert.Equal(_products.Count + 1, repository.GetProducts().Count());
             }
@@ -136,9 +136,9 @@ namespace WebApi.Tests.Services
             using (var repository = new ProductRepository(new ProductsDbContext(_options)))
             {
                 var result = repository.GetProduct(product.Id);
-                Assert.IsType<Product>(product);
                 Assert.IsType<Product>(result);
-                Assert.NotEqual(product, result);
+                Assert.Equal(product, result);
+                Assert.NotEqual(_products[0], result);
             }
         }
 
@@ -152,19 +152,21 @@ namespace WebApi.Tests.Services
             }
         }
 
-        private void Seed(ProductsDbContext context)
+        private void Seed()
         {
-            context.Database.EnsureDeleted();
-            context.Database.EnsureCreated();
-
             _products = new List<Product>()
             {
-                new Product(){ Id = 1, ProductName = "Mouse",Price = 10.00M },
-                new Product(){ Id = 2, ProductName = "Keyboard", Price = 20.00M },
-                new Product(){ Id = 3, ProductName = "Notebook", Price = 200.00M }
+                new Product() { Id = 1, ProductName = "Mouse", Price = 10.00M },
+                new Product() { Id = 2, ProductName = "Keyboard", Price = 15.00M },
+                new Product() { Id = 3, ProductName = "Gamepad", Price = 25.00M },
             };
-            context.Products.AddRange(_products);
-            context.SaveChanges(true);
+
+            using (var context = new ProductsDbContext(_options))
+            {
+                context.Database.EnsureDeleted();
+                context.Products.AddRange(_products);
+                context.SaveChanges();
+            }
         }        
     }
 }

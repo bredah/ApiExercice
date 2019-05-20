@@ -38,8 +38,8 @@ namespace WebApi.Services
         /// <returns>How many changes occurred during the delete</returns>
         public int DeleteProduct(int id)
         {
-            var product = DBContext.Products.Find(id);
-            DBContext.Products.Remove(product);
+            var product = DBContext.Products.Where(p => p.Id == id).FirstOrDefault();
+            DBContext.Entry(product).State = Microsoft.EntityFrameworkCore.EntityState.Deleted;
             return DBContext.SaveChanges(true);
         }
 

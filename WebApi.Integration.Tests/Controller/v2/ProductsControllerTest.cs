@@ -38,51 +38,40 @@ namespace WebApi.Integration.Tests.Controller.v2
         public async Task Get_All()
         {
             var response = await Client.GetAsync($"{basePath}");
+            response.EnsureSuccessStatusCode();
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            // Validate response content
-            var json = await response.Content.ReadAsStringAsync();
-            Assert.True(JArray.Parse(json).Count > 0, "DB has no record");
         }
 
         [Fact]
         public async Task Get_All_PageSize()
         {
             var response = await Client.GetAsync($"{basePath}?pageSize=5");
+            response.EnsureSuccessStatusCode();
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            // Validate response content
-            var json = await response.Content.ReadAsStringAsync();
-            Assert.Equal(5, JArray.Parse(json).Count);
         }
 
         [Fact]
         public async Task Get_All_SearchDescription()
         {
             var response = await Client.GetAsync($"{basePath}?searchDescription=iPhone");
+            response.EnsureSuccessStatusCode();
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            // Validate response content
-            var json = await response.Content.ReadAsStringAsync();
-            Assert.Equal(5, JArray.Parse(json).Count);
         }
 
         [Fact]
         public async Task Get_All_SearchDescription_BlankDescription()
         {
             var response = await Client.GetAsync($"{basePath}?searchDescription=");
+            response.EnsureSuccessStatusCode();
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            // Validate response content
-            var json = await response.Content.ReadAsStringAsync();
-            Assert.True(JArray.Parse(json).HasValues);
-            Assert.Equal(5, JArray.Parse(json).Count);
         }
 
         [Fact]
         public async Task Get_All_SearchDescription_InvalidDescription()
         {
             var response = await Client.GetAsync($"{basePath}?searchDescription=xxx");
+            response.EnsureSuccessStatusCode();
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            // Validate response content
-            var json = await response.Content.ReadAsStringAsync();
-            Assert.False(JArray.Parse(json).HasValues);
         }
 
         [Fact]
@@ -96,9 +85,8 @@ namespace WebApi.Integration.Tests.Controller.v2
         public async Task Get_ById()
         {
             var response = await Client.GetAsync($"{basePath}/1");
+            response.EnsureSuccessStatusCode();
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            var json = await response.Content.ReadAsStringAsync();
-            Assert.True(JObject.Parse(json).Count > 0, "DB has no record");
         }
 
         [Fact]
@@ -122,7 +110,8 @@ namespace WebApi.Integration.Tests.Controller.v2
                     encoding: Encoding.UTF8,
                     mediaType: "application/json")
             );
-            // Check the response status code
+            // Check the response
+            response.EnsureSuccessStatusCode();
             Assert.Equal(HttpStatusCode.Created, response.StatusCode);
         }
 
@@ -158,7 +147,8 @@ namespace WebApi.Integration.Tests.Controller.v2
                     encoding: Encoding.UTF8,
                     mediaType: "application/json")
             );
-            // Check the response status code
+            // Check the response
+            response.EnsureSuccessStatusCode();
             Assert.Equal(HttpStatusCode.Accepted, response.StatusCode);
         }
 
@@ -201,9 +191,8 @@ namespace WebApi.Integration.Tests.Controller.v2
         [Fact]
         public async Task Delete()
         {
-            // Post the request and capture the return
             var response = await Client.DeleteAsync($"{basePath}/12");
-            // Check the response status code
+            response.EnsureSuccessStatusCode();
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         }
 

@@ -37,13 +37,9 @@ namespace WebApi.Integration.Tests.Controller.v1
         [Fact]
         public async Task Get_All()
         {
-            // Make the request
             var response = await Client.GetAsync($"{basePath}");
-            // Vaidate the response
+            response.EnsureSuccessStatusCode();
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            // Validate response content
-            var json = await response.Content.ReadAsStringAsync();
-            Assert.True(JArray.Parse(json).Count > 0, "DB has no record");
         }
 
         [Fact]
@@ -57,9 +53,8 @@ namespace WebApi.Integration.Tests.Controller.v1
         public async Task Get_ById()
         {
             var response = await Client.GetAsync($"{basePath}/1");
+            response.EnsureSuccessStatusCode();
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            var json = await response.Content.ReadAsStringAsync();
-            Assert.True(JObject.Parse(json).Count > 0, "DB has no record");
         }
 
         [Fact]
@@ -83,7 +78,8 @@ namespace WebApi.Integration.Tests.Controller.v1
                     encoding: Encoding.UTF8,
                     mediaType: "application/json")
             );
-            // Check the response status code
+            // Check the response
+            response.EnsureSuccessStatusCode();
             Assert.Equal(HttpStatusCode.Created, response.StatusCode);
         }
 
@@ -119,7 +115,8 @@ namespace WebApi.Integration.Tests.Controller.v1
                     encoding: Encoding.UTF8,
                     mediaType: "application/json")
             );
-            // Check the response status code
+            // Check the response
+            response.EnsureSuccessStatusCode();
             Assert.Equal(HttpStatusCode.Accepted, response.StatusCode);
         }
 
@@ -164,7 +161,8 @@ namespace WebApi.Integration.Tests.Controller.v1
         {
             // Post the request and capture the return
             var response = await Client.DeleteAsync($"{basePath}/2");
-            // Check the response status code
+            // Check the response
+            response.EnsureSuccessStatusCode();
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         }
 
