@@ -125,7 +125,7 @@ namespace WebApi.Controllers.v1
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                Console.WriteLine(e.StackTrace);
                 return BadRequest("It not possible to remove the product with this id");
             }
             return Ok("Product is removed");

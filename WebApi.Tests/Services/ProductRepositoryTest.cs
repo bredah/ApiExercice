@@ -108,11 +108,10 @@ namespace WebApi.Tests.Services
         [Fact]
         public void AddProduct()
         {
-            var product = new Product() { ProductName = "desktop", Price = 150.00M };
             // Run the test against one instance of the context
             using (var repository = new ProductRepository(new ProductsDbContext(_options)))
             {
-                repository.AddProduct(product);                
+                repository.AddProduct(new Product() { ProductName = "desktop", Price = 150.00M });                
             }
             // Use a separate instance of the context to verify correct data was saved to database
             using (var repository = new ProductRepository(new ProductsDbContext(_options)))
@@ -156,9 +155,9 @@ namespace WebApi.Tests.Services
         {
             _products = new List<Product>()
             {
-                new Product() { Id = 1, ProductName = "Mouse", Price = 10.00M },
-                new Product() { Id = 2, ProductName = "Keyboard", Price = 15.00M },
-                new Product() { Id = 3, ProductName = "Gamepad", Price = 25.00M },
+                new Product() { ProductName = "Mouse", Price = 10.00M },
+                new Product() { ProductName = "Keyboard", Price = 15.00M },
+                new Product() { ProductName = "Gamepad", Price = 25.00M },
             };
 
             using (var context = new ProductsDbContext(_options))

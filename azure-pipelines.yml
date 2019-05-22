@@ -25,11 +25,11 @@ steps:
   inputs:
     command: test
     projects: '**/WebApi.Tests/*.csproj'
-    arguments: '--configuration $(buildConfiguration)  --collect "Code coverage"'
+    arguments: '--configuration $(buildConfiguration)  /p:CollectCoverage=true /p:CoverletOutputFormat=lcov /p:CoverletOutput=./lcov.info'
 
 - task: DotNetCoreCLI@2
   displayName: Integration Test
   inputs:
     command: test
-    projects: '**/WebApi.Tests/*.csproj'
-    arguments: '--configuration $(buildConfiguration)  --collect "Code coverage"'
+    projects: '**/WebApi.Integration.Tests/*.csproj'
+    arguments: '--configuration $(buildConfiguration)  /p:CollectCoverage=true /p:CoverletOutputFormat=lcov /p:CoverletOutput=./lcov.info'

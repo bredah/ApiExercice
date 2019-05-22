@@ -1,5 +1,6 @@
 .idea
 .vs
+.vscode
 
 # User-specific files
 *.rsuser
@@ -306,3 +307,6 @@ MigrationBackup/
 
 # Sonar Scanner
 .sonarqube
+
+# Coverage
+lcov.info
